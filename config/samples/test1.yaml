@@ -1,0 +1,46 @@
+# configmap.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: configmap-app1
+  labels:
+    app: configmap-app1
+    ref: autorestart-sample
+data:
+  app-config.yaml: |
+    server:
+      port: 806
+    database:
+      url: "mysql://user:password@db-host:3306/mydb"
+    logging:
+      level: "info"
+---
+# deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: configmap-app1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: my-app
+  template:
+    metadata:
+      labels:
+        app: my-app
+    spec:
+      containers:
+        - name: my-app-container
+          image: harbor-int.hongkang-life.com/infra/nginx:1.25.5
+          volumeMounts:
+            - name: config-volume  # 挂载 ConfigMap 到容器内目录
+              mountPath: /etc/app/config
+              readOnly: true
+      volumes:
+        - name: config-volume
+          configMap:
+            name: configmap-app1  # 引用已创建的 ConfigMap
+            items:
+              - key: app-config.yaml  # 指定 ConfigMap 中的键
+                path: app-config.yaml  # 挂载后的文件名
