@@ -1,0 +1,14 @@
+apiVersion: auto.test.com/v1
+kind: Restart
+metadata:
+  labels:
+    app.kubernetes.io/name: autoreload-cm-deployment
+    app.kubernetes.io/managed-by: kustomize
+  name: autorestart-sample
+spec:
+  # TODO(user): Add fields here
+  app_list:
+    - app1
+    - app2
+    - configmap-app1
+    - configmap-app2

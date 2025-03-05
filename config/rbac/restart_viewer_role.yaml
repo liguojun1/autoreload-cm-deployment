@@ -1,0 +1,23 @@
+# permissions for end users to view restarts.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  labels:
+    app.kubernetes.io/name: autoreload-cm-deployment
+    app.kubernetes.io/managed-by: kustomize
+  name: restart-viewer-role
+rules:
+- apiGroups:
+  - auto.test.com
+  resources:
+  - restarts
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - auto.test.com
+  resources:
+  - restarts/status
+  verbs:
+  - get
